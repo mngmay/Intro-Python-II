@@ -1,4 +1,5 @@
 from room import Room
+from player import Player
 
 # Declare all the rooms
 
@@ -33,12 +34,17 @@ room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
+# print("Room after linking: ", room['narrow'].n_to)
 #
 # Main
 #
 
 # Make a new player object that is currently in the 'outside' room.
 
+name = input("What is your adventurer's name?: ")
+player = Player(name, room['outside'])
+print(f"Welcome {player.name}!")
+# print(player.current_room.name)
 # Write a loop that:
 #
 # * Prints the current room name
@@ -50,17 +56,26 @@ room['treasure'].s_to = room['narrow']
 #
 # If the user enters "q", quit the game.
 
+valid_cmds = ['s', 'n', 'e', 'w', 'q']
 
-def check_inputs(cmd):
-    pass
+game = True
 
-
-while True:
+while game:
     # print the current room name and description
-    cmd = input("->")
-    if cmd == "q":
-        # Break out of the loop
-        print("Goodbye!")
-        break
+    print(
+        f"You are currently in the {player.current_room.name}")
+    cmd = input("Enter a direction (n, s, w, e) to move, or 'q' to quit: ")
+    # Break out of the loop
+    if cmd in valid_cmds:
+        direction = f"{cmd}_to"
+        # grabs current_room of player, looks for direction attribute, defaults to None if invalid.
+        new_room = getattr(player.current_room, direction, None)
+        if new_room:
+            player.current_room = new_room
+        elif cmd == "q":
+            print("Goodbye!")
+            game = False
+        else:
+            print("There is no room that way.")
     else:
         print("Invalid command.")
