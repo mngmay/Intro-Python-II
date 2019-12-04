@@ -63,7 +63,7 @@ game = True
 while game:
     # print the current room name and description
     print(
-        f"You are currently in the {player.current_room.name}")
+        f"You are currently in the {player.current_room.name}. {player.current_room.description}")
     cmd = input("Enter a direction (n, s, w, e) to move, or 'q' to quit: ")
     # Break out of the loop
     if cmd in valid_cmds:
