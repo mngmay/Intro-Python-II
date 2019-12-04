@@ -63,9 +63,18 @@ game = True
 while game:
     # print the current room name and description
     print(
-        f"You are currently in the {player.current_room.name}. {player.current_room.description}")
+        f"You are currently in the {player.current_room.name}. {player.current_room.description}.")
+    # print the items in a room
+    if len(player.current_room.items) > 0:
+        print("This room has the following items:")
+        for item in player.current_room.items:
+            print(item)
+    else:
+        print("This room has no items.")
+
+    # prompt player for direction
     cmd = input("Enter a direction (n, s, w, e) to move, or 'q' to quit: ")
-    # Break out of the loop
+
     if cmd in valid_cmds:
         direction = f"{cmd}_to"
         # grabs current_room of player, looks for direction attribute, defaults to None if invalid.
