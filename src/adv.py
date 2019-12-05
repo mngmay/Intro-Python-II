@@ -100,21 +100,18 @@ while game:
             player.current_room = new_room
         elif action == 'get' or action == 'take':
             # if there is an item followed by the command check to see if the item is in the room
-            if len(cmd.split()) > 1 and len(cmd.split()) < 3:
+            if len(cmd.split()) > 1:
                 requested_item = cmd.split()[1].lower()
                 valid_items = getattr(
                     player.current_room, "items")
                 grabbed_item = False
                 for i in valid_items:
-                    # if the requested item is in the room add it to player's inventory and remove it from the room's items list
+                    # if the requested item is in the room
                     if i.name.lower() == requested_item:
-                        print("matches!!!")
-                        print("before", player.inventory,
-                              player.current_room.items)
+                        # add item to player inventory
                         player.inventory.append(i)
+                        # remove item from current room
                         player.current_room.items.remove(i)
-                        print("after", player.inventory,
-                              player.current_room.items)
                         grabbed_item = True
                         break
                 if grabbed_item == False:
@@ -124,7 +121,18 @@ while game:
                 print("You need to include an item after your get command.")
         elif action == 'drop':
             if len(cmd.split()) > 1:
-                print("Valid drop command", cmd)
+                requested_item = cmd.split()[1].lower()
+                valid_items = player.inventory
+                grabbed_item = False
+                for i in valid_items:
+                    # if the requested item is in player's inventory, drop it into the room
+                    if i.name.lower() == requested_item:
+                        player.current_room.items.append(i)
+                        player.inventory.remove(i)
+                        grabbed_item = True
+                        break
+                if grabbed_item == False:
+                    print("That item is not in your inventory!")
             else:
                 print("You need to include an item after your get command.")
         elif cmd == "q":
