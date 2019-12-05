@@ -85,9 +85,10 @@ while game:
         print("There are no items here.")
 
     # prompt player for direction
-    cmd = input("What would you like to do? \n n: Move North \n s: Move South \n e: Move East \n w: Move West  \n get <item name>: Pick up an item \n drop <item name>: Drop an item \n q: Quit the game \n Your selection: ")
+    cmd = input("What would you like to do? \n n: Move North \n s: Move South \n e: Move East \n w: Move West  \n get/take <item name>: Pick up an item \n drop <item name>: Drop an item \n i/inventory: Look at inventory \n q: Quit the game \n Your selection: ").lower()
 
-    valid_cmds = ['s', 'n', 'e', 'w', 'q', 'get', 'take', 'drop']
+    valid_cmds = ['s', 'n', 'e', 'w', 'q',
+                  'get', 'take', 'drop', 'i', 'inventory']
     action = cmd.split()[0]
 
     # if the first word entered is a valid command
@@ -101,7 +102,7 @@ while game:
         elif action == 'get' or action == 'take':
             # if there is an item followed by the command check to see if the item is in the room
             if len(cmd.split()) > 1:
-                requested_item = cmd.split()[1].lower()
+                requested_item = cmd.split()[1]
                 valid_items = getattr(
                     player.current_room, "items")
                 grabbed_item = False
@@ -135,6 +136,13 @@ while game:
                     print("That item is not in your inventory!")
             else:
                 print("You need to include an item after your get command.")
+        elif action == "i" or action == "inventory":
+            if len(player.inventory) < 1:
+                print("You have nothing in your inventory.")
+            else:
+                print("Your inventory contains the following:")
+                for i, item in enumerate(player.inventory, start=1):
+                    print(f"{i}) {item}")
         elif cmd == "q":
             print("Goodbye!")
             game = False
