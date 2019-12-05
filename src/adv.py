@@ -5,10 +5,10 @@ from item import Item
 # Declare items
 
 item = {'chicken': Item(
-    "Fried Chicken", "Golden and fried to perfection, this piece of poultry is delicious on its own or paired with a waffle."),
-    'shoes': Item("Converse Shoes", "Perfect for protecting your feet and keeping that hipster vibe. Not great for arch support."),
-    'glasses': Item("Black Rimmed Glasses", "Just the thing to view an overlook with."),
-    'wrapper': Item("Empty Wrapper", "Looks like it had something cool in it but someone must have gotten to it first. You snooze you lose.")}
+    "Chicken", "Golden and fried to perfection, this piece of poultry is delicious on its own or paired with a waffle."),
+    'shoes': Item("Shoes", "Perfect for protecting your feet and keeping that hipster vibe. Not great for arch support."),
+    'glasses': Item("Glasses", "Black rimmed and lookin hip. Just the thing to view an overlook with."),
+    'wrapper': Item("Wrapper", "Looks like it had something cool in it but someone must have gotten to it first. You snooze you lose.")}
 
 
 # Declare all the rooms
@@ -88,26 +88,45 @@ while game:
     cmd = input("What would you like to do? \n n: Move North \n s: Move South \n e: Move East \n w: Move West  \n get <item name>: Pick up an item \n drop <item name>: Drop an item \n q: Quit the game \n Your selection: ")
 
     valid_cmds = ['s', 'n', 'e', 'w', 'q', 'get', 'take', 'drop']
+    action = cmd.split()[0]
 
     # if the first word entered is a valid command
-    if cmd.split()[0] in valid_cmds:
+    if action in valid_cmds:
         direction = f"{cmd}_to"
         # grabs current_room of player, looks for direction attribute, defaults to None if invalid.
         new_room = getattr(player.current_room, direction, None)
 
-        print("cmd", cmd)
         if new_room:
             player.current_room = new_room
-        elif cmd.split()[0] == 'get' or cmd.split()[0] == 'take':
-            # if there is an item followed by the command
-            if len(cmd.split()) > 1:
-                print("Valid get command", cmd)
+        elif action == 'get' or action == 'take':
+            # if there is an item followed by the command check to see if the item is in the room
+            if len(cmd.split()) > 1 and len(cmd.split()) < 3:
+                requested_item = cmd.split()[1].lower()
+                valid_items = getattr(
+                    player.current_room, "items")
+                grabbed_item = False
+                for i in valid_items:
+                    # if the requested item is in the room add it to player's inventory and remove it from the room's items list
+                    if i.name.lower() == requested_item:
+                        print("matches!!!")
+                        print("before", player.inventory,
+                              player.current_room.items)
+                        player.inventory.append(i)
+                        player.current_room.items.remove(i)
+                        print("after", player.inventory,
+                              player.current_room.items)
+                        grabbed_item = True
+                        break
+                if grabbed_item == False:
+                    print("That item is not in the room.")
 
-            # if the item is valid
             else:
                 print("You need to include an item after your get command.")
-        elif cmd.split()[0] == 'drop':
-            print("Valid drop command", cmd)
+        elif action == 'drop':
+            if len(cmd.split()) > 1:
+                print("Valid drop command", cmd)
+            else:
+                print("You need to include an item after your get command.")
         elif cmd == "q":
             print("Goodbye!")
             game = False
