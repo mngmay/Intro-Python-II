@@ -7,7 +7,8 @@ from item import Item
 item = {'chicken': Item(
     "Fried Chicken", "Golden and fried to perfection, this piece of poultry is delicious on its own or paired with a waffle."),
     'shoes': Item("Converse Shoes", "Perfect for protecting your feet and keeping that hipster vibe. Not great for arch support."),
-    'glasses': Item("Black Rimmed Glasses", "Just the thing to view an overlook with.")}
+    'glasses': Item("Black Rimmed Glasses", "Just the thing to view an overlook with."),
+    'wrapper': Item("Empty Wrapper", "Looks like it had something cool in it but someone must have gotten to it first. You snooze you lose.")}
 
 
 # Declare all the rooms
@@ -28,7 +29,7 @@ to north. The smell of gold permeates the air.""", []),
 
     'treasure': Room("Treasure Chamber", """You've found the long-lost treasure
 chamber! Sadly, it has already been completely emptied by
-earlier adventurers. The only exit is to the south.""", []),
+earlier adventurers. The only exit is to the south.""", [item['wrapper']]),
 }
 
 
@@ -54,6 +55,7 @@ room['treasure'].s_to = room['narrow']
 name = input("What is your adventurer's name?: ")
 player = Player(name, room['outside'])
 print(f"Welcome {player.name}!")
+
 # print(player.current_room.name)
 # Write a loop that:
 #
@@ -66,8 +68,6 @@ print(f"Welcome {player.name}!")
 #
 # If the user enters "q", quit the game.
 
-valid_cmds = ['s', 'n', 'e', 'w', 'q']
-
 game = True
 
 while game:
@@ -77,20 +77,37 @@ while game:
     # print the items in a room
     if len(player.current_room.items) > 0:
         print("This room has the following items:")
-        for item in player.current_room.items:
-            print(f"{item.name}: {item.description}")
+        for i, item in enumerate(player.current_room.items, start=1):
+            print(
+                f"{i}) {item.name}: {item.description}")
+
     else:
-        print("This room has no items.")
+        print("There are no items here.")
 
     # prompt player for direction
-    cmd = input("Enter a direction (n, s, w, e) to move, or 'q' to quit: ")
+    cmd = input("What would you like to do? \n n: Move North \n s: Move South \n e: Move East \n w: Move West  \n get <item name>: Pick up an item \n drop <item name>: Drop an item \n q: Quit the game \n Your selection: ")
 
-    if cmd in valid_cmds:
+    valid_cmds = ['s', 'n', 'e', 'w', 'q', 'get', 'take', 'drop']
+
+    # if the first word entered is a valid command
+    if cmd.split()[0] in valid_cmds:
         direction = f"{cmd}_to"
         # grabs current_room of player, looks for direction attribute, defaults to None if invalid.
         new_room = getattr(player.current_room, direction, None)
+
+        print("cmd", cmd)
         if new_room:
             player.current_room = new_room
+        elif cmd.split()[0] == 'get' or cmd.split()[0] == 'take':
+            # if there is an item followed by the command
+            if len(cmd.split()) > 1:
+                print("Valid get command", cmd)
+
+            # if the item is valid
+            else:
+                print("You need to include an item after your get command.")
+        elif cmd.split()[0] == 'drop':
+            print("Valid drop command", cmd)
         elif cmd == "q":
             print("Goodbye!")
             game = False
