@@ -54,7 +54,7 @@ room['treasure'].s_to = room['narrow']
 
 name = input("What is your adventurer's name?: ")
 player = Player(name, room['outside'])
-print(f"Welcome {player.name}!")
+print(f"\n Welcome {player.name}!")
 
 # print(player.current_room.name)
 # Write a loop that:
@@ -71,9 +71,12 @@ print(f"Welcome {player.name}!")
 game = True
 
 while game:
+    print(f"\n==========================================================================================================")
+    print("\n")
     # print the current room name and description
     print(
         f"You are currently in the {player.current_room.name}. {player.current_room.description}.")
+    print("\n")
     # print the items in a room
     if len(player.current_room.items) > 0:
         print("This room has the following items:")
@@ -84,10 +87,13 @@ while game:
     else:
         print("There are no items here.")
 
-    # prompt player for direction
-    cmd = input("What would you like to do? \n n: Move North \n s: Move South \n e: Move East \n w: Move West  \n get/take <item name>: Pick up an item \n drop <item name>: Drop an item \n i/inventory: Look at inventory \n q: Quit the game \n Your selection: ").lower()
+    print("\n")
 
-    valid_cmds = ['s', 'n', 'e', 'w', 'q',
+    # prompt player for direction
+    cmd = input(
+        "What would you like to do? Select 'c' for a list of commands: ").lower()
+
+    valid_cmds = ['s', 'n', 'e', 'w', 'q', 'c',
                   'get', 'take', 'drop', 'i', 'inventory']
     action = cmd.split()[0]
 
@@ -114,6 +120,7 @@ while game:
                         # remove item from current room
                         player.current_room.items.remove(i)
                         grabbed_item = True
+                        i.on_take()
                         break
                 if grabbed_item == False:
                     print("That item is not in the room.")
@@ -146,6 +153,8 @@ while game:
         elif cmd == "q":
             print("Goodbye!")
             game = False
+        elif cmd == "c":
+            print("Here is a list of commands: \n n: Move North \n s: Move South \n e: Move East \n w: Move West  \n get/take <item name>: Pick up an item \n drop <item name>: Drop an item \n i/inventory: Look at inventory \n q: Quit the game \n")
         else:
             print("There is no room that way.")
     else:
