@@ -115,6 +115,7 @@ while game:
                 for i in valid_items:
                     # if the requested item is in the room
                     if i.name.lower() == requested_item:
+                        print(i.on_take())
                         # add item to player inventory
                         player.inventory.append(i)
                         # remove item from current room
@@ -135,6 +136,7 @@ while game:
                 for i in valid_items:
                     # if the requested item is in player's inventory, drop it into the room
                     if i.name.lower() == requested_item:
+                        print(i.on_drop())
                         player.current_room.items.append(i)
                         player.inventory.remove(i)
                         grabbed_item = True
