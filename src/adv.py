@@ -77,7 +77,7 @@ print(f"\n Welcome {player.name}!")
 game = True
 
 while game:
-    print(f"\n==========================================================================================================")
+    print(f"\n=================================================================================")
     print("\n")
     # print the current room name and description
     print(
@@ -122,13 +122,12 @@ while game:
                 for i in valid_items:
                     # if the requested item is in the room
                     if i.name.lower() == requested_item:
-                        print(i.on_take())
                         # add item to player inventory
                         player.inventory.append(i)
                         # remove item from current room
                         player.current_room.items.remove(i)
                         grabbed_item = True
-                        i.on_take()
+                        print("\n", i.on_take())
                         break
                 if grabbed_item == False:
                     print("That item is not in the room.")
@@ -139,16 +138,16 @@ while game:
             if len(cmd.split()) > 1:
                 requested_item = cmd.split()[1].lower()
                 valid_items = player.inventory
-                grabbed_item = False
+                dropped_item = False
                 for i in valid_items:
                     # if the requested item is in player's inventory, drop it into the room
                     if i.name.lower() == requested_item:
-                        print(i.on_drop())
                         player.current_room.items.append(i)
                         player.inventory.remove(i)
-                        grabbed_item = True
+                        dropped_item = True
+                        print("\n", i.on_drop())
                         break
-                if grabbed_item == False:
+                if dropped_item == False:
                     print("That item is not in your inventory!")
             else:
                 print("You need to include an item after your get command.")
